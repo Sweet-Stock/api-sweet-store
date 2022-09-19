@@ -1,0 +1,16 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1/sweet-store
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/sweetstore?charSet=LATIN1
+    username: postgres
+    password: sweetstore
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
