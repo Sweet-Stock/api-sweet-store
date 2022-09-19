@@ -1,4 +1,4 @@
-package sweet.apisweetstorage.entity.enums
+package sweet.apisweetstore.entity.enums
 
 enum class AuthType {
     GOOGLE, DEFAULT,

@@ -1,12 +1,12 @@
-package sweet.apisweetstorage.entity
+package sweet.apisweetstore.entity
 
-import sweet.apisweetstorage.entity.enums.AuthType
-import sweet.apisweetstorage.entity.enums.ProfileType
+import sweet.apisweetstore.entity.enums.AuthType
+import sweet.apisweetstore.entity.enums.ProfileType
 import java.util.*
 import javax.persistence.*
 
 @Entity
-data class UserEntity(
+data class User(
     @Id
     var uuid: UUID? = UUID.randomUUID(),
     var name: String? = "",
@@ -19,5 +19,5 @@ data class UserEntity(
 
     @OneToOne
     @JoinColumn(name = "uuid")
-    var address: AddressEntity? = null,
+    var address: Address? = null,
 )

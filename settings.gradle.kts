@@ -1,1 +1,1 @@
-rootProject.name = "api-sweet-storage"
+rootProject.name = "api-sweet-store"

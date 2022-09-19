@@ -1,10 +1,10 @@
-package sweet.apisweetstorage
+package sweet.apisweetstore
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class ApiSweetStorageApplicationTests {
+class ApiSweetStoreApplicationTests {
 
 	@Test
 	fun contextLoads() {

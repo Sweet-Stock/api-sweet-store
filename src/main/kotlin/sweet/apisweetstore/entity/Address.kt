@@ -1,11 +1,11 @@
-package sweet.apisweetstorage.entity
+package sweet.apisweetstore.entity
 
 import java.util.*
 import javax.persistence.Entity
 import javax.persistence.Id
 
 @Entity
-data class AddressEntity(
+data class Address(
     @Id
     var uuid: UUID? = UUID.randomUUID(),
     var city: String? = "",
