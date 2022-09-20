@@ -1,4 +1,4 @@
-package sweet.apisweetstore.entity.enums
+package sweet.apisweetstore.enums
 
 enum class Category(name: String) {
     CAKE(name = "Bolo"),

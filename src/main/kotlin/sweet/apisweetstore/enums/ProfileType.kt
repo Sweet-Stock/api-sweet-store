@@ -1,4 +1,4 @@
-package sweet.apisweetstore.entity.enums
+package sweet.apisweetstore.enums
 
 enum class ProfileType {
     EDUCATION, COMPULSIVE, MODERATE, DIABETIC

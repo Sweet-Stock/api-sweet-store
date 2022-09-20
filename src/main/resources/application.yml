@@ -9,8 +9,6 @@ spring:
     username: postgres
     password: sweetstore
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
+    hibernate.ddl-auto: create-drop
+    generate-ddl: true
+    show-sql: true
