@@ -1,10 +1,9 @@
-package sweet.apisweetstore.mapper
+package sweet.apisweetstore.mapper.user
 
 import org.springframework.stereotype.Component
 import sweet.apisweetstore.dto.request.UserRequest
-import sweet.apisweetstore.enums.AuthType
-import sweet.apisweetstore.enums.ProfileType
-import sweet.apisweetstore.model.Address
+import sweet.apisweetstore.mapper.AddressRequestToModel
+import sweet.apisweetstore.mapper.Mapper
 import sweet.apisweetstore.model.User
 
 @Component

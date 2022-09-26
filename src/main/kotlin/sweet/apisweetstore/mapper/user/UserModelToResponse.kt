@@ -1,8 +1,8 @@
-package sweet.apisweetstore.mapper
+package sweet.apisweetstore.mapper.user
 
 import org.springframework.stereotype.Component
-import sweet.apisweetstore.dto.request.UserRequest
 import sweet.apisweetstore.dto.response.UserResponse
+import sweet.apisweetstore.mapper.Mapper
 import sweet.apisweetstore.model.User
 
 @Component

@@ -1,13 +1,16 @@
 package sweet.apisweetstore.service
 
 import org.springframework.stereotype.Service
+import sweet.apisweetstore.dto.request.ChangePasswordRequest
 import sweet.apisweetstore.dto.request.UserRequest
+import sweet.apisweetstore.dto.response.ChangePasswordResponse
 import sweet.apisweetstore.dto.response.LoginRequest
 import sweet.apisweetstore.dto.response.LoginResponse
 import sweet.apisweetstore.dto.response.UserResponse
+import sweet.apisweetstore.enums.ChangePasswordMessage
 import sweet.apisweetstore.enums.LoginMessage
-import sweet.apisweetstore.mapper.UserRequestToModel
-import sweet.apisweetstore.mapper.UserModelToResponse
+import sweet.apisweetstore.mapper.user.UserRequestToModel
+import sweet.apisweetstore.mapper.user.UserModelToResponse
 import sweet.apisweetstore.repository.UserRepository
 import sweet.apisweetstore.utils.Cryptography
 
@@ -44,7 +47,7 @@ class UserService(
                         Cryptography.convertPasswordToSHA512(loginRequest.password)
                     ),
                     email = loginRequest.email,
-                    message = LoginMessage.LOGIN_SUCESS.toString()
+                    message = LoginMessage.LOGIN_SUCCESS.toString()
                 )
             }
 
@@ -60,8 +63,34 @@ class UserService(
             message = LoginMessage.EMAIL_NOT_EXIST.toString()
         )
     }
+    fun changePassword(changePasswordRequest: ChangePasswordRequest): ChangePasswordResponse {
+        if (userRepository.countByUuid(changePasswordRequest.uuid) == 0L) {
+            return ChangePasswordResponse(ChangePasswordMessage.UUID_ERROR.toString())
+        }
+        if (userRepository
+                .verifyActualPassword(
+                    changePasswordRequest.uuid,
+                    Cryptography.convertPasswordToSHA512(changePasswordRequest.actualPassword)
+                ) == 0L
+        ) {
+            return ChangePasswordResponse(ChangePasswordMessage.CURRENT_PASSWORD_INCORRECT.toString())
+        }
 
-//    fun resetPassword(resetPasswordRequest: ResetPasswordRequest): Any {
-//
-//    }
+        if (changePasswordRequest.actualPassword == changePasswordRequest.newPassword) {
+            return ChangePasswordResponse(ChangePasswordMessage.SAME_PASSWORD.toString())
+        }
+
+        if (changePasswordRequest.newPassword != changePasswordRequest.newPasswordConfirmation) {
+            return ChangePasswordResponse(ChangePasswordMessage.CONFIRMATION_PASSWORD_INCORRECT.toString())
+        }
+
+        if (userRepository.changePassword(
+                Cryptography.convertPasswordToSHA512(changePasswordRequest.newPassword),
+                changePasswordRequest.uuid
+            ) != 1
+        ) {
+            return ChangePasswordResponse(ChangePasswordMessage.PASSWORD_ERROR.toString())
+        }
+        return ChangePasswordResponse(ChangePasswordMessage.CHANGE_PASSWORD_SUCCESS.toString())
+    }
 }
