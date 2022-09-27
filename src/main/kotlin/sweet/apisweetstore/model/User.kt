@@ -1,6 +1,5 @@
 package sweet.apisweetstore.model
 
-import sweet.apisweetstore.dto.request.AddressRequest
 import sweet.apisweetstore.enums.AuthType
 import sweet.apisweetstore.enums.ProfileType
 import java.time.LocalDateTime
@@ -13,6 +12,8 @@ data class User(
     @Id
     val uuid: String? = UUID.randomUUID().toString(),
     val name: String,
+
+    @Column(name = "email", unique = true)
     val email: String,
     val image: String? = null,
     val phone: String,

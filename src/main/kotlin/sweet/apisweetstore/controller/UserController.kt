@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.util.UriComponentsBuilder
+import sweet.apisweetstore.dto.request.ChangePasswordRequest
 //import sweet.apisweetstore.dto.request.ResetPasswordRequest
 import sweet.apisweetstore.dto.request.UserRequest
+import sweet.apisweetstore.dto.response.ChangePasswordResponse
 import sweet.apisweetstore.dto.response.LoginRequest
 import sweet.apisweetstore.dto.response.LoginResponse
 import sweet.apisweetstore.dto.response.UserResponse
@@ -35,8 +37,8 @@ class UserController(
         return ResponseEntity.ok().body(userService.login(loginRequest))
     }
 
-//    @PostMapping("/reset-password")
-//    fun resetPassword(@RequestBody resetPasswordRequest: ResetPasswordRequest) {
-//        return ResponseEntity.ok().body(userService.resetPassword(resetPasswordRequest))
-//    }
+    @PostMapping("/change-password")
+    fun changePassword(@RequestBody resetPasswordRequest: ChangePasswordRequest): ResponseEntity<ChangePasswordResponse> {
+        return ResponseEntity.ok().body(userService.changePassword(resetPasswordRequest))
+    }
 }
