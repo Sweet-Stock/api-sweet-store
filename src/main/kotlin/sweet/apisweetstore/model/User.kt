@@ -23,7 +23,7 @@ data class User(
 
     @OneToOne(cascade = arrayOf(CascadeType.ALL))
     @JoinColumn(name = "address_uuid", referencedColumnName = "uuid")
-    val address: Address? = Address(),
+    val address: Address,
 
     val dateCreate: LocalDateTime? = LocalDateTime.now(),
     val dateUpdate: LocalDateTime? = LocalDateTime.now(),
