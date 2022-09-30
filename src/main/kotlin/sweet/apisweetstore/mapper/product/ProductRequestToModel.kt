@@ -8,7 +8,15 @@ import sweet.apisweetstore.model.Product
 @Component
 class ProductRequestToModel: Mapper<Product, ProductResponse> {
     override fun map(t: Product): ProductResponse {
-        
+        return ProductResponse(
+            t.name,
+            t.description,
+            t.price,
+            t.image,
+            t.category,
+            t.nutritionalValue,
+            t.store
+        )
     }
 
 }
