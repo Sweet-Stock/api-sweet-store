@@ -13,9 +13,7 @@ data class Subscription(
         val type: String? = "",
         val nextDeliveryDate: String? = "",
         val value: Double? = null,
-        @ManyToOne
         val payment: String? = "",
-        @OneToOne
         val user: String? = "",
         val dateCreate: LocalDateTime? = LocalDateTime.now(),
         val dateUpdate: LocalDateTime? = LocalDateTime.now(),

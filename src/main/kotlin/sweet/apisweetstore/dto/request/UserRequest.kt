@@ -2,12 +2,7 @@ package sweet.apisweetstore.dto.request
 
 import sweet.apisweetstore.enums.AuthType
 import sweet.apisweetstore.enums.ProfileType
-import sweet.apisweetstore.model.Address
-import java.util.*
-import javax.persistence.CascadeType
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.OneToOne
+
 
 data class UserRequest(
     val name: String,

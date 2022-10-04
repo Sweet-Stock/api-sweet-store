@@ -19,8 +19,6 @@ data class Product(
         val description: String? = "",
         val price: Double,
         val image: String,
-        @ManyToOne(cascade = arrayOf(CascadeType.ALL))
-        @JoinColumn(name = "address_uuid", referencedColumnName = "uuid")
         val category: String,
         @OneToOne
         val nutritionalValue: NutritionalFacts,
