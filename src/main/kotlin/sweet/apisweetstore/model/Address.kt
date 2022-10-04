@@ -11,13 +11,14 @@ import javax.persistence.Table
 data class Address(
     @Id
     val uuid: String? = UUID.randomUUID().toString(),
-    val city: String,
+    val city: String? = "",
     val complement: String? = "",
     val neighborhood: String? = "",
-    val number: Int,
-    val state: String,
-    val street: String,
-    val cep: String,
+    val number: String? = "",
+    val state: String? = "",
+    val street: String? = "",
+    val cep: String? = "",
+
     val dateCreate: LocalDateTime? = LocalDateTime.now(),
     val dateUpdate: LocalDateTime? = LocalDateTime.now(),
 )

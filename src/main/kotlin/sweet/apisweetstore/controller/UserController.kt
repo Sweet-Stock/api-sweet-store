@@ -10,7 +10,7 @@ import sweet.apisweetstore.dto.request.ChangePasswordRequest
 //import sweet.apisweetstore.dto.request.ResetPasswordRequest
 import sweet.apisweetstore.dto.request.UserRequest
 import sweet.apisweetstore.dto.response.ChangePasswordResponse
-import sweet.apisweetstore.dto.response.LoginRequest
+import sweet.apisweetstore.dto.request.LoginRequest
 import sweet.apisweetstore.dto.response.LoginResponse
 import sweet.apisweetstore.dto.response.UserResponse
 import sweet.apisweetstore.service.UserService

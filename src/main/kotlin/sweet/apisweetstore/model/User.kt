@@ -1,5 +1,6 @@
 package sweet.apisweetstore.model
 
+import sweet.apisweetstore.dto.request.AddressRequest
 import sweet.apisweetstore.enums.AuthType
 import sweet.apisweetstore.enums.ProfileType
 import java.time.LocalDateTime
@@ -23,7 +24,7 @@ data class User(
 
     @OneToOne(cascade = arrayOf(CascadeType.ALL))
     @JoinColumn(name = "address_uuid", referencedColumnName = "uuid")
-    val address: Address,
+    val address: Address?,
 
     val dateCreate: LocalDateTime? = LocalDateTime.now(),
     val dateUpdate: LocalDateTime? = LocalDateTime.now(),

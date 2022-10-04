@@ -1,4 +1,4 @@
-package sweet.apisweetstore.dto.response
+package sweet.apisweetstore.dto.request
 
 data class LoginRequest(
     val email: String,
