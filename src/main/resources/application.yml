@@ -9,6 +9,7 @@ spring:
     username: postgres
     password: sweetstore
   jpa:
-    hibernate.ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate.ddl-auto: update
     generate-ddl: true
     show-sql: true
