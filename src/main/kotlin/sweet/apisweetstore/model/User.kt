@@ -12,13 +12,13 @@ import javax.persistence.*
 data class User(
     @Id
     val uuid: String? = UUID.randomUUID().toString(),
-    val name: String,
+    var name: String,
 
     @Column(name = "email", unique = true)
-    val email: String,
-    val image: String? = null,
-    val phone: String,
-    val profile: ProfileType? = ProfileType.MODERATE,
+    var email: String,
+    var image: String? = null,
+    var phone: String,
+    var profile: ProfileType? = ProfileType.MODERATE,
     var password: String,
     val authType: AuthType? = AuthType.DEFAULT,
 

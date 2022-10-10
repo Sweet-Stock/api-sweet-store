@@ -1,5 +1,6 @@
 package sweet.apisweetstore.service
 
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import sweet.apisweetstore.dto.request.ChangePasswordRequest
 import sweet.apisweetstore.dto.request.UserRequest
@@ -11,6 +12,7 @@ import sweet.apisweetstore.enums.ChangePasswordMessage
 import sweet.apisweetstore.enums.LoginMessage
 import sweet.apisweetstore.mapper.user.UserRequestToModel
 import sweet.apisweetstore.mapper.user.UserModelToResponse
+import sweet.apisweetstore.model.User
 import sweet.apisweetstore.repository.UserRepository
 import sweet.apisweetstore.utils.Cryptography
 
@@ -92,5 +94,22 @@ class UserService(
             return ChangePasswordResponse(ChangePasswordMessage.PASSWORD_ERROR.message)
         }
         return ChangePasswordResponse(ChangePasswordMessage.CHANGE_PASSWORD_SUCCESS.message)
+    }
+
+    fun updateProfile(user: UserRequest, uuid: String):ResponseEntity<Unit>{
+      var userToUpdate: User = userRepository.findByUuid(uuid)
+        if (userToUpdate == null){
+         return ResponseEntity.noContent().build()
+      }
+
+        userToUpdate.email = user.email
+        userToUpdate.name = user.name
+        userToUpdate.phone = user.phone
+        userToUpdate.password = user.password
+        userToUpdate.image = user.image
+        userToUpdate.profile = user.profile
+
+        userRepository.save(userToUpdate)
+       return ResponseEntity.ok().build()
     }
 }
