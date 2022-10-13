@@ -28,4 +28,8 @@ data class User(
 
     val dateCreate: LocalDateTime? = LocalDateTime.now(),
     val dateUpdate: LocalDateTime? = LocalDateTime.now(),
+
+    @OneToOne(cascade = arrayOf(CascadeType.ALL))
+    @JoinColumn(name = "cart_uuid", referencedColumnName = "uuid")
+    val cart: Cart? = Cart(),
 )
