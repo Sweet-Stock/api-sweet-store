@@ -26,4 +26,6 @@ interface UserRepository: JpaRepository<User, String> {
     @Query("update User u set u.password = ?1 where u.uuid = ?2")
     fun changePassword(password: String, uuid: String): Int
 
+    fun findByUuid(uuid: String): User
+
 }

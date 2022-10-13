@@ -2,6 +2,7 @@ package sweet.apisweetstore.controller
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -11,6 +12,7 @@ import sweet.apisweetstore.dto.request.ChangePasswordRequest
 import sweet.apisweetstore.dto.request.UserRequest
 import sweet.apisweetstore.dto.response.ChangePasswordResponse
 import sweet.apisweetstore.dto.request.LoginRequest
+
 import sweet.apisweetstore.dto.response.LoginResponse
 import sweet.apisweetstore.dto.response.UserResponse
 import sweet.apisweetstore.service.UserService
@@ -40,5 +42,9 @@ class UserController(
     @PostMapping("/change-password")
     fun changePassword(@RequestBody resetPasswordRequest: ChangePasswordRequest): ResponseEntity<ChangePasswordResponse> {
         return ResponseEntity.ok().body(userService.changePassword(resetPasswordRequest))
+    }
+    @PutMapping("/change-profile")
+    fun updateProfile(@RequestBody userToUpdate:UserRequest, uuid: String): ResponseEntity<Unit> {
+        return userService.updateProfile(userToUpdate, uuid)
     }
 }
