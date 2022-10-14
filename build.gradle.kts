@@ -17,6 +17,9 @@ repositories {
 }
 
 dependencies {
+//	implementation("org.springframework.cloud:spring-cloud-starter-openfeign:2.0.4.RELEASE")
+//	implementation("com.google.code.gson:gson:2.9.1")
+
 	implementation("org.springdoc:springdoc-openapi-ui:1.6.11")
 	implementation("org.postgresql:postgresql:42.5.0")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")

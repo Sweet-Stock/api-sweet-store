@@ -13,3 +13,7 @@ spring:
     hibernate.ddl-auto: update
     generate-ddl: true
     show-sql: true
+sweetstock:
+  domain: localhost
+  path: /v1/sweet-stock/
+  port: 8080
