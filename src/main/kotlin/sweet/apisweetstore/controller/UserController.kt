@@ -27,21 +27,19 @@ class UserController(
         @RequestBody user: UserRequest,
         uriBuilder: UriComponentsBuilder
     ): ResponseEntity<UserResponse> {
-        val user = userService.register(user)
-        val uri = uriBuilder.path("/user/${user.uuid}").build().toUri()
-        return ResponseEntity.created(uri).body(user)
+        return userService.register(user, uriBuilder)
     }
 
     @PostMapping("/login")
     fun login(
         @RequestBody loginRequest: LoginRequest
     ): ResponseEntity<LoginResponse> {
-        return ResponseEntity.ok().body(userService.login(loginRequest))
+        return userService.login(loginRequest)
     }
 
     @PostMapping("/change-password")
     fun changePassword(@RequestBody resetPasswordRequest: ChangePasswordRequest): ResponseEntity<ChangePasswordResponse> {
-        return ResponseEntity.ok().body(userService.changePassword(resetPasswordRequest))
+        return userService.changePassword(resetPasswordRequest)
     }
     @PutMapping("/change-profile")
     fun updateProfile(@RequestBody userToUpdate:UserRequest, uuid: String): ResponseEntity<Unit> {
