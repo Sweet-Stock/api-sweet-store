@@ -4,7 +4,6 @@ import java.time.LocalDateTime
 
 data class CartResponse(
     val idItem: Int? = 0,
-    val uuidUser: String? = "",
     val uuidProduct: String? = "",
     val uuidCompany: String? ="",
     val quantityProduct: Int? = 0,

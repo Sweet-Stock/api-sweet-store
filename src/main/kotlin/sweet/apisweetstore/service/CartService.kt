@@ -108,7 +108,7 @@ class CartService(
 
         val itensCart = cartRepository.getUserCartByUuid(uuidUser)
 
-        if(itensCart.isEmpty()){
+        if (itensCart.isEmpty()) {
             return ResponseEntity.status(400).body(
                 mutableListOf(
                     CartResponse(message = CartMessage.EMPTY_CART.message)
@@ -116,8 +116,16 @@ class CartService(
             )
         }
 
-
-
-        return ResponseEntity.ok().build()
+        return ResponseEntity.ok().body(
+            itensCart.map {
+                CartResponse(
+                    idItem = it.idItem,
+                    uuidProduct = it.uuidProduct,
+                    uuidCompany = it.uuidCompany,
+                    quantityProduct = it.quantityProduct,
+                    dateAddition = it.dateAddition
+                )
+            }
+        )
     }
 }
