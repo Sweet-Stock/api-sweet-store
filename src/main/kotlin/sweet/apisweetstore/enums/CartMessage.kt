@@ -11,9 +11,20 @@ enum class CartMessage(val message: String) {
     ALL_ITENS_SAVED(message = "Todos itens salvos com sucesso no carrinho"),
 
     //GENERICO
-    USER_NOT_EXIST(message = "Usuário não existe, items não cadastrados ao carrinho"),
+    USER_NOT_EXIST(message = "Usuário não existe!"),
 
     //GET DO CARRINHO
-    EMPTY_CART(message = "Carrinho vazio!")
+    EMPTY_CART(message = "Carrinho vazio!"),
+
+    //ERASE CARRINHO
+    EMPTY_CART_NOTHING_TO_ERASE(message = "Carrinho vazio, nada para excluir"),
+    ERASE_SUCCESS(message = "Carrinho limpo com sucesso"),
+
+    //DELETE ITEM
+    NOT_FOUND_ITEM_ERROR("Erro ao deletar ou atualizar quantidade do item, item não encontrado"),
+
+    //UPDATE ITEM
+    UPDATE_ERROR_ITEM("Erro ao atualizar quantidade do item, quantidade deve ser maior que zero"),
+    UPDATE_ERROR_ITEM_NO_DIFF("Erro ao atualizar quantidade do item, quantidade nova deve ser diferente da antiga")
 
 }
