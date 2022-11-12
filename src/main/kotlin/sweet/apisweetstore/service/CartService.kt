@@ -6,8 +6,9 @@ import org.springframework.stereotype.Service
 import sweet.apisweetstore.dto.request.ItemCartRequest
 import sweet.apisweetstore.dto.response.AddCartResponse
 import sweet.apisweetstore.dto.response.CartResponse
-import sweet.apisweetstore.dto.response.ItemResponse
 import sweet.apisweetstore.enums.CartMessage
+import sweet.apisweetstore.integration.IntegracaoSweetStock
+import sweet.apisweetstore.integration.ProductResponseAPI
 import sweet.apisweetstore.model.Cart
 import sweet.apisweetstore.repository.CartRepository
 import sweet.apisweetstore.repository.UserRepository
@@ -16,7 +17,8 @@ import java.time.LocalDateTime
 @Service
 class CartService(
     private val cartRepository: CartRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val integracaoSweetStock: IntegracaoSweetStock
 ) {
 
     fun addProductToCart(products: List<ItemCartRequest>, uuidUser: String): ResponseEntity<AddCartResponse> {
@@ -105,22 +107,41 @@ class CartService(
         val itensCart = cartRepository.getUserCartByUuid(uuidUser)
 
         if (itensCart.isEmpty()) {
-            return ResponseEntity.status(400).body(
+            return ResponseEntity.status(404).body(
                 CartResponse(
                     message = CartMessage.EMPTY_CART.message
                 )
             )
         }
 
+        var uuidsRequest = mutableListOf<String>()
+
+        itensCart.forEach {
+            uuidsRequest.add(it.uuidProduct)
+        }
+
+        var teste: List<String> = uuidsRequest
+
+        val listProducts = integracaoSweetStock.getProductsByUuid(
+            teste
+        ).body
+
         return ResponseEntity.ok().body(
             CartResponse(
-                itensCart.map {
-                    ItemResponse(
-                        idItem = it.idItem,
-                        uuidProduct = it.uuidProduct,
-                        uuidCompany = it.uuidCompany,
-                        quantityProduct = it.quantityProduct,
-                        dateAddition = it.dateAddition
+                listProducts?.map {
+                    ProductResponseAPI(
+                        uuid = it.uuid,
+                        name = it.name,
+                        saleValue = it.saleValue,
+                        expirationDate = it.expirationDate,
+                        dateInsert = it.dateInsert,
+                        dateUpdate = it.dateUpdate,
+                        isRefigerated = it.isRefigerated,
+                        sold = it.sold,
+                        total = it.total,
+                        unitMeasurement = it.unitMeasurement,
+                        category = it.category,
+                        picture = it.picture
                     )
                 }
 
@@ -161,7 +182,7 @@ class CartService(
             )
         )
 
-        if(cartRepository.countItemFromCartUser(uuidUser, uuidProduct) == 0L){
+        if (cartRepository.countItemFromCartUser(uuidUser, uuidProduct) == 0L) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 CartResponse(
                     message = CartMessage.NOT_FOUND_ITEM_ERROR.message
@@ -181,7 +202,7 @@ class CartService(
             )
         )
 
-        if(cartRepository.countItemFromCartUser(uuidUser, uuidProduct) == 0L){
+        if (cartRepository.countItemFromCartUser(uuidUser, uuidProduct) == 0L) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 CartResponse(
                     message = CartMessage.NOT_FOUND_ITEM_ERROR.message
@@ -189,7 +210,7 @@ class CartService(
             )
         }
 
-        if(newQuantity <= 0){
+        if (newQuantity <= 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 CartResponse(
                     message = CartMessage.UPDATE_ERROR_ITEM.message
@@ -199,7 +220,7 @@ class CartService(
 
         val quantityUpdate = cartRepository.updateQuantityItem(uuidUser, uuidProduct, newQuantity)
 
-        if(quantityUpdate == 0){
+        if (quantityUpdate == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 CartResponse(
                     message = CartMessage.UPDATE_ERROR_ITEM_NO_DIFF.message

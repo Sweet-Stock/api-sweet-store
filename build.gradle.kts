@@ -16,11 +16,17 @@ repositories {
 	mavenCentral()
 }
 
-dependencies {
-//	implementation("org.springframework.cloud:spring-cloud-starter-openfeign:2.0.4.RELEASE")
-//	implementation("com.google.code.gson:gson:2.9.1")
 
-	implementation("org.springdoc:springdoc-openapi-ui:1.6.11")
+dependencies {
+	//Dependencies for feign api
+	implementation("org.springframework.cloud:spring-cloud-starter-openfeign:3.1.5")
+//	implementation("com.google.gson:gson:2.2.1")
+	implementation ("com.google.code.gson:gson:2.10")
+
+
+	//Swagger
+	implementation("org.springdoc:springdoc-openapi-ui:1.6.12")
+
 	implementation("org.postgresql:postgresql:42.5.0")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
