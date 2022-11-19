@@ -24,8 +24,6 @@ interface IntegracaoSweetStock {
     @Throws(FlowException::class)
     @PostMapping("/products/get-products-by-uuids", consumes = ["application/json"])
     fun getProductsByUuid(@RequestBody uuids: List<String>): ResponseEntity<List<ProductResponseAPI>>
-
-
 }
 
 class FeignSimpleEncoderConfig {

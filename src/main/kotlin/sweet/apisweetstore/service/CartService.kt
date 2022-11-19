@@ -141,7 +141,8 @@ class CartService(
                         total = it.total,
                         unitMeasurement = it.unitMeasurement,
                         category = it.category,
-                        picture = it.picture
+                        picture = it.picture,
+                        nutritionalFacts = it.nutritionalFacts
                     )
                 }
 
