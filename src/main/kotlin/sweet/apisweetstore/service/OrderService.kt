@@ -81,10 +81,10 @@ class OrderService(
             brandCard = payment.brand
         )
 
-        var createdOrder = orderRepository.save(order)
+        val createdOrder = orderRepository.save(order)
 
         if (createdOrder.card?.replace("\\s".toRegex(), "")?.length == 16) {
-            createdOrder?.card = "**** **** **** " + createdOrder.card!!.takeLast(4)
+            createdOrder.card = "**** **** **** " + createdOrder.card!!.takeLast(4)
         }
 
         val orderResponse = OrderResponse(
