@@ -81,6 +81,19 @@ class OrderService(
             brandCard = payment.brand
         )
 
+        cartUserProducts?.itens?.forEach{product ->
+            cartUserProductsOriginal.forEach{cartProduct ->
+                if (cartProduct.uuidProduct == product.uuid){
+                    integracaoSweetStock.sellProduct(
+                        uuid = product.uuid,
+                        soldQuantity = cartProduct.quantityProduct
+                    )
+                }
+            }
+        }
+
+        cartService.eraseUserCart(uuidUser)
+
         val createdOrder = orderRepository.save(order)
 
         if (createdOrder.card?.replace("\\s".toRegex(), "")?.length == 16) {
@@ -97,19 +110,6 @@ class OrderService(
             brandCard = createdOrder.brandCard,
             quantityItems = createdOrder.quantityItems,
         )
-
-        cartService.eraseUserCart(uuidUser)
-
-        cartUserProducts?.itens?.forEach{product ->
-            cartUserProductsOriginal.forEach{cartProduct ->
-                if (cartProduct.uuidProduct == product.uuid){
-                    integracaoSweetStock.sellProduct(
-                        uuid = product.uuid,
-                        soldQuantity = cartProduct.quantityProduct
-                    )
-                }
-            }
-        }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(orderResponse)
     }

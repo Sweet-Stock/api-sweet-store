@@ -3,8 +3,6 @@ package sweet.apisweetstore.integration
 import feign.Response
 import feign.Util
 import org.springframework.cloud.openfeign.FeignClient
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 
 import feign.codec.ErrorDecoder
 import org.springframework.context.annotation.Bean
@@ -12,8 +10,7 @@ import sweet.apisweetstore.exception.FlowException
 import java.lang.Exception
 import com.google.gson.Gson
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.*
 import kotlin.jvm.Throws
 
 
@@ -32,7 +29,7 @@ interface IntegracaoSweetStock {
     fun getNameCompany(@PathVariable uuidProduct: String): ResponseEntity<String>
 
     @Throws(FlowException::class)
-    @GetMapping("/product/{soldQuantity}/{uuid}", consumes = ["application/json"])
+    @PutMapping("/products/{soldQuantity}/{uuid}", consumes = ["application/json"])
     fun sellProduct(@PathVariable uuid: String,@PathVariable soldQuantity: Int)
 }
 

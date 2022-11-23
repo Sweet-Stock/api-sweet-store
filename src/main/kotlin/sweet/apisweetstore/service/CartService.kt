@@ -154,9 +154,9 @@ class CartService(
             )
         )
 
-        val cartUserItems = getUserCartByUuid(uuidUser).body
+        val cartUserItems = cartRepository.getUserCartByUuid(uuidUser)
 
-        if (cartUserItems?.itens?.isEmpty() == true) {
+        if (cartUserItems.isEmpty()) {
             return ResponseEntity.status(400).body(
                 CartResponse(
                     message = CartMessage.EMPTY_CART_NOTHING_TO_ERASE.message
