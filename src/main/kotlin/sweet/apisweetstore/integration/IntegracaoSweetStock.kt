@@ -12,6 +12,8 @@ import sweet.apisweetstore.exception.FlowException
 import java.lang.Exception
 import com.google.gson.Gson
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import kotlin.jvm.Throws
 
 
@@ -24,6 +26,14 @@ interface IntegracaoSweetStock {
     @Throws(FlowException::class)
     @PostMapping("/products/get-products-by-uuids", consumes = ["application/json"])
     fun getProductsByUuid(@RequestBody uuids: List<String>): ResponseEntity<List<ProductResponseAPI>>
+
+    @Throws(FlowException::class)
+    @GetMapping("/companies/get-name-company/{uuidProduct}", consumes = ["application/json"])
+    fun getNameCompany(@PathVariable uuidProduct: String): ResponseEntity<String>
+
+    @Throws(FlowException::class)
+    @GetMapping("/product/{soldQuantity}/{uuid}", consumes = ["application/json"])
+    fun sellProduct(@PathVariable uuid: String,@PathVariable soldQuantity: Int)
 }
 
 class FeignSimpleEncoderConfig {
@@ -32,8 +42,6 @@ class FeignSimpleEncoderConfig {
         return CustomErrorDecoder()
     }
 }
-
-
 
 class CustomErrorDecoder : ErrorDecoder {
 

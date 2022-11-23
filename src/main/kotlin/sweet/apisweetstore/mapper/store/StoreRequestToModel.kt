@@ -9,7 +9,7 @@ import sweet.apisweetstore.model.Address
 import sweet.apisweetstore.model.Store
 
 @Component
-class StoreRequestToModel: Mapper<Store, StoreRequest> {
+class StoreRequestToModel : Mapper<Store, StoreRequest> {
     override fun map(t: Store): StoreRequest {
         return StoreRequest(
             t.name,

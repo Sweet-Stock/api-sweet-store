@@ -8,16 +8,16 @@ import sweet.apisweetstore.model.Address
 import sweet.apisweetstore.model.Store
 
 @Component
-class StoreModelToResponse: Mapper<Store, StoreResponse> {
+class StoreModelToResponse : Mapper<Store, StoreResponse> {
     override fun map(t: Store): StoreResponse {
-     return StoreResponse(
-         t.name,
-         t.cnpj,
-         t.email,
-         t.phone,
-         t.image,
-         t.address
-     )
+        return StoreResponse(
+            t.name,
+            t.cnpj,
+            t.email,
+            t.phone,
+            t.image,
+            t.address
+        )
     }
 
 }

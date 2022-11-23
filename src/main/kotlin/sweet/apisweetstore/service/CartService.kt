@@ -120,10 +120,8 @@ class CartService(
             uuidsRequest.add(it.uuidProduct)
         }
 
-        var teste: List<String> = uuidsRequest
-
         val listProducts = integracaoSweetStock.getProductsByUuid(
-            teste
+            uuidsRequest
         ).body
 
         return ResponseEntity.ok().body(
@@ -145,7 +143,6 @@ class CartService(
                         nutritionalFacts = it.nutritionalFacts
                     )
                 }
-
             )
         )
     }
