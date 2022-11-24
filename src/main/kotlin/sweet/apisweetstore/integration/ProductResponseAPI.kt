@@ -2,7 +2,7 @@ package sweet.apisweetstore.integration
 
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.util.Date
+import java.util.*
 
 data class ProductResponseAPI(
     val uuid: String? = "",
