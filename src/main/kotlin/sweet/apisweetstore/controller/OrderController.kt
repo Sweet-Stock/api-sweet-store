@@ -17,12 +17,12 @@ class OrderController(
         return orderService.createOrder(orderRequest)
     }
 
-    @GetMapping("/{uuidUser}")
+    @GetMapping("/get-user-orders/{uuidUser}")
     fun getUserOrders(@PathVariable uuidUser: String): ResponseEntity<List<OrderResponse>>{
         return  orderService.getUserOrders(uuidUser)
     }
 
-    @GetMapping("/{nameCompany}")
+    @GetMapping("/get-users-orders-by-company/{nameCompany}")
     fun getUsersOrdersByCompany(@PathVariable nameCompany: String): ResponseEntity<List<OrderResponse>>{
         return  orderService.getUsersOrdersByCompany(nameCompany)
     }

@@ -8,10 +8,8 @@ import sweet.apisweetstore.dto.response.OrderResponse
 import sweet.apisweetstore.exception.FlowException
 import sweet.apisweetstore.integration.IntegracaoSweetStock
 import sweet.apisweetstore.model.Order
-import sweet.apisweetstore.repository.CartRepository
-import sweet.apisweetstore.repository.OrderRepository
-import sweet.apisweetstore.repository.PaymentRepository
-import sweet.apisweetstore.repository.UserRepository
+import sweet.apisweetstore.model.OrderItem
+import sweet.apisweetstore.repository.*
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -23,6 +21,7 @@ class OrderService(
     private val cartService: CartService,
     private val cartRepository: CartRepository,
     private val integracaoSweetStock: IntegracaoSweetStock,
+    private val orderItemRepository: OrderItemRepository
 ) {
 
     fun createOrder(orderRequest: OrderRequest): ResponseEntity<OrderResponse> {
@@ -49,12 +48,14 @@ class OrderService(
             return ResponseEntity.badRequest().build()
         }
 
-        cartUserProducts?.itens?.forEach{product ->
-            cartUserProductsOriginal.forEach{cartProduct ->
-                if (cartProduct.uuidProduct == product.uuid){
-                    if(cartProduct.quantityProduct > product.total!!){
-                        throw FlowException("""O produto de id ${product.uuid} nao pode ser vendido pois a quantidade
-                             requirida ultrapassa quantidade de estoque""","ERROR")
+        cartUserProducts?.itens?.forEach { product ->
+            cartUserProductsOriginal.forEach { cartProduct ->
+                if (cartProduct.uuidProduct == product.uuid) {
+                    if (cartProduct.quantityProduct > product.total!!) {
+                        throw FlowException(
+                            """O produto de id ${product.uuid} nao pode ser vendido pois a quantidade
+                             requirida ultrapassa quantidade de estoque""", "ERROR"
+                        )
                     }
                 }
             }
@@ -71,7 +72,7 @@ class OrderService(
 
         val order = Order(
             idOrder = null,
-            statusOrder = null,
+            statusOrder = "Pronto para preparação",
             uuidUser = uuidUser,
             valueOrder = totalValueOrder,
             quantityItems = cartUserProducts?.itens?.size,
@@ -81,9 +82,9 @@ class OrderService(
             brandCard = payment.brand
         )
 
-        cartUserProducts?.itens?.forEach{product ->
-            cartUserProductsOriginal.forEach{cartProduct ->
-                if (cartProduct.uuidProduct == product.uuid){
+        cartUserProducts?.itens?.forEach { product ->
+            cartUserProductsOriginal.forEach { cartProduct ->
+                if (cartProduct.uuidProduct == product.uuid) {
                     integracaoSweetStock.sellProduct(
                         uuid = product.uuid,
                         soldQuantity = cartProduct.quantityProduct
@@ -100,18 +101,38 @@ class OrderService(
             createdOrder.card = "**** **** **** " + createdOrder.card!!.takeLast(4)
         }
 
-        val orderResponse = OrderResponse(
-            idOrder = createdOrder.idOrder,
-            statusOrder = createdOrder.statusOrder,
-            dateOrder = createdOrder.dateOrder,
-            nameConfectionery = createdOrder.nameConfectionery,
-            valueOrder = createdOrder.valueOrder,
-            card = createdOrder.card,
-            brandCard = createdOrder.brandCard,
-            quantityItems = createdOrder.quantityItems,
-        )
+        cartUserProducts?.itens?.forEach { product ->
+            cartUserProductsOriginal.forEach { cartProduct ->
+                if (cartProduct.uuidProduct == product.uuid) {
+                    orderItemRepository.save(
+                        OrderItem(
+                            null,
+                            order.idOrder,
+                            product.name,
+                            product.saleValue,
+                            product.expirationDate,
+                            product.isRefigerated,
+                            cartProduct.quantityProduct,
+                            product.unitMeasurement,
+                            product.category?.name
+                        )
+                    )
+                }
+            }
+        }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderResponse)
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            OrderResponse(
+                idOrder = createdOrder.idOrder,
+                statusOrder = createdOrder.statusOrder,
+                dateOrder = createdOrder.dateOrder,
+                nameConfectionery = createdOrder.nameConfectionery,
+                valueOrder = createdOrder.valueOrder,
+                card = createdOrder.card,
+                brandCard = createdOrder.brandCard,
+                quantityItems = createdOrder.quantityItems,
+            )
+        )
     }
 
     fun getUserOrders(uuidUser: String): ResponseEntity<List<OrderResponse>> {
@@ -132,7 +153,7 @@ class OrderService(
             )
         }
 
-        if(orderResponses.isEmpty()){
+        if (orderResponses.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
         }
 
@@ -140,7 +161,7 @@ class OrderService(
     }
 
     fun getUsersOrdersByCompany(nameCompany: String): ResponseEntity<List<OrderResponse>> {
-        if (orderRepository.countByNameCompany(nameCompany) != 1L) {
+        if (orderRepository.countByNameCompany(nameCompany) == 0L) {
             return ResponseEntity.badRequest().build()
         }
 
@@ -157,7 +178,7 @@ class OrderService(
             )
         }
 
-        if(orderResponses.isEmpty()){
+        if (orderResponses.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
         }
 
