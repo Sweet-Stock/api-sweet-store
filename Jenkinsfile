@@ -24,6 +24,6 @@ pipeline {
                     sh 'java -jar build/libs/api-sweet-store-0.0.1-SNAPSHOT.jar'
                 
             }
-       }}
+       }
     }
 }        
