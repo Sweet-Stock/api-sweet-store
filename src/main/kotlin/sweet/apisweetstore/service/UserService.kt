@@ -114,8 +114,7 @@ class UserService(
                 phone = user.phone,
                 password = user.password,
                 image = user.image,
-                profile = user.profile,
-                null
+                profile = user.profile
             )
         )
         return ResponseEntity.ok().build()
