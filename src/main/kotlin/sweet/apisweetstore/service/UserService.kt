@@ -46,14 +46,20 @@ class UserService(
                 Cryptography.convertPasswordToSHA512(loginRequest.password)
             )
 
+            val uuidUser = userRepository.findUuidUser(
+                loginRequest.email,
+                Cryptography.convertPasswordToSHA512(loginRequest.password)
+            )
+
+            val user = userRepository.findByUuid(uuidUser)
+
             if (auth == 1L) return ResponseEntity.status(200).body(
                 LoginResponse(
-                    uuid = userRepository.findUuidUser(
-                        loginRequest.email,
-                        Cryptography.convertPasswordToSHA512(loginRequest.password)
-                    ),
+                    uuid = uuidUser,
                     email = loginRequest.email,
-                    message = LoginMessage.LOGIN_SUCCESS.message
+                    message = LoginMessage.LOGIN_SUCCESS.message,
+                    name = user.name,
+                    profile = user.profile.toString()
                 )
             )
 
