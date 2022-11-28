@@ -105,18 +105,20 @@ class UserService(
     }
 
     fun updateProfile(user: UserRequest, uuid: String): ResponseEntity<Unit> {
-        val userToUpdate: User = userRepository.findByUuid(uuid)
+        var userToUpdate: User = userRepository.findByUuid(uuid)
 
-        userRepository.save(
-            User(
-                email = user.email,
-                name = user.name,
-                phone = user.phone,
-                password = user.password,
-                image = user.image,
-                profile = user.profile
-            )
-        )
+        if (userToUpdate == null) {
+            return ResponseEntity.noContent().build()
+        }
+
+        userToUpdate.email = user.email
+        userToUpdate.name = user.name
+        userToUpdate.phone = user.phone
+        userToUpdate.password = user.password
+        userToUpdate.image = user.image
+        userToUpdate.profile = user.profile
+
+        userRepository.save(userToUpdate)
         return ResponseEntity.ok().build()
     }
 }
