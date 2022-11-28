@@ -19,16 +19,13 @@ class PaymentService(
 ) {
 
     fun addPaymentForUser(paymentRequest: PaymentRequest): ResponseEntity<Any> {
-        if(userRepository.countByUuid(paymentRequest.uuidUser) != 1L){
-            return ResponseEntity.badRequest().build()
-        }
+        if(userRepository.countByUuid(paymentRequest.uuidUser) != 1L) return ResponseEntity.badRequest().build()
+
         return ResponseEntity.status(201).body(paymentRepository.save(paymentRequestToModel.map(paymentRequest)))
     }
 
     fun getPaymentsByUser(uuidUser: String): ResponseEntity<List<PaymentResponse>> {
-        if(userRepository.countByUuid(uuidUser) != 1L){
-            return ResponseEntity.badRequest().build()
-        }
+        if(userRepository.countByUuid(uuidUser) != 1L) return ResponseEntity.badRequest().build()
 
         var payments = paymentRepository.findAllByUuidUser(uuidUser)
 
@@ -37,13 +34,12 @@ class PaymentService(
                 it.cardNumber = "**** **** **** " + it.cardNumber.takeLast(4)
             }
         }
+
         return ResponseEntity.ok().body(paymentListModelToListResponse.map(payments))
     }
 
     fun deletePaymentsByIdPayment(idPayment: Int): ResponseEntity<Any> {
-        if(paymentRepository.findById(idPayment).isEmpty){
-            return ResponseEntity.badRequest().build()
-        }
+        if(paymentRepository.findById(idPayment).isEmpty) return ResponseEntity.badRequest().build()
 
         paymentRepository.deleteById(idPayment)
 

@@ -22,9 +22,7 @@ class CartService(
 ) {
 
     fun addProductToCart(products: List<ItemCartRequest>, uuidUser: String): ResponseEntity<AddCartResponse> {
-        val userExist = userRepository.countByUuid(uuidUser)
-
-        if (userExist != 1L) {
+        if (userRepository.countByUuid(uuidUser) != 1L) {
             return ResponseEntity.status(404).body(AddCartResponse(message = CartMessage.USER_NOT_EXIST.message))
         }
 
@@ -36,9 +34,7 @@ class CartService(
             )
         }
 
-        val validQuantitys = products.any { it.quantityProduct <= 0 }
-
-        if (validQuantitys) {
+        if (products.any { it.quantityProduct <= 0 }) {
             return ResponseEntity.status(400).body(AddCartResponse(message = CartMessage.SHOULD_BIG_THAN_0.message))
         }
 
@@ -49,9 +45,7 @@ class CartService(
                 .body(AddCartResponse(message = CartMessage.CAN_SEND_JUST_ONE_COMPANY.message))
         }
 
-        val validDiffProducts = products.distinctBy { it.uuidProduct }
-
-        if (validDiffProducts.size != products.size) {
+        if (products.distinctBy { it.uuidProduct }.size != products.size) {
             return ResponseEntity.status(400).body(
                 AddCartResponse(message = CartMessage.SEND_JUST_DIFFERENT_PRODUCTS.message)
             )
@@ -154,9 +148,7 @@ class CartService(
             )
         )
 
-        val cartUserItems = cartRepository.getUserCartByUuid(uuidUser)
-
-        if (cartUserItems.isEmpty()) {
+        if (cartRepository.getUserCartByUuid(uuidUser).isEmpty()) {
             return ResponseEntity.status(400).body(
                 CartResponse(
                     message = CartMessage.EMPTY_CART_NOTHING_TO_ERASE.message
@@ -164,11 +156,10 @@ class CartService(
             )
         }
 
-        var erased = cartRepository.eraseCartByUuidUser(uuidUser)
-
         return ResponseEntity.status(200).body(
             CartResponse(
-                message = CartMessage.ERASE_SUCCESS.message + " $erased itens excluidos do carrinho"
+                message = CartMessage.ERASE_SUCCESS.message + """ ${cartRepository.eraseCartByUuidUser(uuidUser)}
+                    itens excluidos do carrinho""".trimIndent()
             )
         )
     }
@@ -216,16 +207,13 @@ class CartService(
             )
         }
 
-        val quantityUpdate = cartRepository.updateQuantityItem(uuidUser, uuidProduct, newQuantity)
-
-        if (quantityUpdate == 0) {
+        if (cartRepository.updateQuantityItem(uuidUser, uuidProduct, newQuantity) == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 CartResponse(
                     message = CartMessage.UPDATE_ERROR_ITEM_NO_DIFF.message
                 )
             )
         }
-
         return ResponseEntity.ok().build()
     }
 }

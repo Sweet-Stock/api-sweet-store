@@ -27,26 +27,18 @@ class OrderService(
     fun createOrder(orderRequest: OrderRequest): ResponseEntity<OrderResponse> {
         val (uuidUser, idPayment) = orderRequest
 
-        if (userRepository.countByUuid(uuidUser) != 1L) {
-            return ResponseEntity.badRequest().build()
-        }
+        if (userRepository.countByUuid(uuidUser) != 1L) return ResponseEntity.badRequest().build()
 
-        if (paymentRepository.countById(idPayment) != 1L) {
-            return ResponseEntity.badRequest().build()
-        }
+        if (paymentRepository.countById(idPayment) != 1L) return ResponseEntity.badRequest().build()
 
         val payment = paymentRepository.findById(idPayment).get()
 
-        if (payment.uuidUser != uuidUser) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
-        }
+        if (payment.uuidUser != uuidUser) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
 
         val cartUserProducts = cartService.getUserCartByUuid(uuidUser).body
         val cartUserProductsOriginal = cartRepository.getUserCartByUuid(uuidUser)
 
-        if (cartUserProducts?.itens?.size == 0) {
-            return ResponseEntity.badRequest().build()
-        }
+        if (cartUserProducts?.itens?.size == 0) return ResponseEntity.badRequest().build()
 
         cartUserProducts?.itens?.forEach { product ->
             cartUserProductsOriginal.forEach { cartProduct ->
@@ -136,64 +128,53 @@ class OrderService(
     }
 
     fun getUserOrders(uuidUser: String): ResponseEntity<List<OrderResponse>> {
-        if (userRepository.countByUuid(uuidUser) != 1L) {
-            return ResponseEntity.badRequest().build()
-        }
+        if (userRepository.countByUuid(uuidUser) != 1L) return ResponseEntity.badRequest().build()
 
-        val orderResponses = orderRepository.getUserOrders(uuidUser).map {
-            OrderResponse(
-                idOrder = it.idOrder,
-                statusOrder = it.statusOrder,
-                dateOrder = it.dateOrder,
-                nameConfectionery = it.nameConfectionery,
-                valueOrder = it.valueOrder,
-                card = it.card,
-                brandCard = it.brandCard,
-                quantityItems = it.quantityItems
-            )
-        }
+        val orderResponses = orderRepository.getUserOrders(uuidUser)
+            .map { (idOrder, _, statusOrder, valueOrder, quantityItems, dateOrder, nameConfectionery, card, brandCard) ->
+                OrderResponse(
+                    idOrder = idOrder,
+                    statusOrder = statusOrder,
+                    dateOrder = dateOrder,
+                    nameConfectionery = nameConfectionery,
+                    valueOrder = valueOrder,
+                    card = card,
+                    brandCard = brandCard,
+                    quantityItems = quantityItems
+                )
+            }
 
-        if (orderResponses.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
-        }
+        if (orderResponses.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
 
         return ResponseEntity.ok().body(orderResponses)
     }
 
     fun getUsersOrdersByCompany(nameCompany: String): ResponseEntity<List<OrderResponse>> {
-        if (orderRepository.countByNameCompany(nameCompany) == 0L) {
-            return ResponseEntity.badRequest().build()
-        }
+        if (orderRepository.countByNameCompany(nameCompany) == 0L) return ResponseEntity.badRequest().build()
 
-        val orderResponses = orderRepository.getCompanyOrders(nameCompany).map {
-            OrderResponse(
-                idOrder = it.idOrder,
-                statusOrder = it.statusOrder,
-                dateOrder = it.dateOrder,
-                nameConfectionery = it.nameConfectionery,
-                valueOrder = it.valueOrder,
-                card = it.card,
-                brandCard = it.brandCard,
-                quantityItems = it.quantityItems
-            )
-        }
+        val orderResponses = orderRepository.getCompanyOrders(nameCompany)
+            .map { (idOrder, _, statusOrder, valueOrder, quantityItems, dateOrder, nameConfectionery, card, brandCard) ->
+                OrderResponse(
+                    idOrder = idOrder,
+                    statusOrder = statusOrder,
+                    dateOrder = dateOrder,
+                    nameConfectionery = nameConfectionery,
+                    valueOrder = valueOrder,
+                    card = card,
+                    brandCard = brandCard,
+                    quantityItems = quantityItems
+                )
+            }
 
-        if (orderResponses.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
-        }
+        if (orderResponses.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
 
         return ResponseEntity.ok().body(orderResponses)
     }
 
     fun updateStatus(idOrder: Int, newStatus: String): ResponseEntity<Any> {
-        if (orderRepository.countById(idOrder) != 1L) {
-            return ResponseEntity.badRequest().build()
-        }
+        if (orderRepository.countById(idOrder) != 1L) return ResponseEntity.badRequest().build()
 
-        orderRepository.updateStatus(
-            statusOrder = newStatus,
-            idOrder = idOrder
-        )
+        orderRepository.updateStatus(statusOrder = newStatus, idOrder = idOrder)
 
         return ResponseEntity.ok().build()
     }

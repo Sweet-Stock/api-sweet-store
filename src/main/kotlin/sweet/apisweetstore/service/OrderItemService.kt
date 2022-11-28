@@ -9,10 +9,7 @@ import sweet.apisweetstore.repository.OrderItemRepository
 class OrderItemService(
     private val orderItemRepository: OrderItemRepository
 ) {
-
-    fun getOrderItems(idOrder: Int): ResponseEntity<List<OrderItem>> {
-        return ResponseEntity.ok(orderItemRepository.findByIdOrder(idOrder))
-    }
-
+    fun getOrderItems(idOrder: Int): ResponseEntity<List<OrderItem>> =
+        ResponseEntity.ok(orderItemRepository.findByIdOrder(idOrder))
 
 }
