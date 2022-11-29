@@ -1,5 +1,7 @@
 package sweet.apisweetstore.service
 
+import com.fasterxml.jackson.core.JsonProcessingException
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -150,6 +152,8 @@ class OrderService(
     }
 
     fun getUsersOrdersByCompany(nameCompany: String): ResponseEntity<List<OrderResponse>> {
+        println(nameCompany)
+
         if (orderRepository.countByNameCompany(nameCompany) == 0L) return ResponseEntity.badRequest().build()
 
         val orderResponses = orderRepository.getCompanyOrders(nameCompany)
