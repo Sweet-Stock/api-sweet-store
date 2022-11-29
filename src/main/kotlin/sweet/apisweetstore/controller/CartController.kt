@@ -8,12 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import sweet.apisweetstore.dto.request.ItemCartRequest
 import sweet.apisweetstore.dto.response.AddCartResponse
 import sweet.apisweetstore.dto.response.CartResponse
-import sweet.apisweetstore.dto.response.ItemResponse
 import sweet.apisweetstore.service.CartService
 
 @RestController
@@ -31,28 +29,28 @@ class CartController(
     }
 
     @GetMapping("/get-user-cart-by-uuid/{uuidUser}")
-    fun getUserCartByUuid(@RequestParam uuidUser: String): ResponseEntity<CartResponse> {
+    fun getUserCartByUuid(@PathVariable uuidUser: String): ResponseEntity<CartResponse> {
         return cartService.getUserCartByUuid(uuidUser)
     }
 
     @DeleteMapping("/erase-user-cart/{uuidUser}")
-    fun eraseUserCart(@RequestParam uuidUser: String): ResponseEntity<CartResponse> {
+    fun eraseUserCart(@PathVariable uuidUser: String): ResponseEntity<CartResponse> {
         return cartService.eraseUserCart(uuidUser)
     }
 
     @DeleteMapping("/delete-item-from-cart-user/{uuidUser}/{uuidProduct}")
     fun deleteItemFromCartUser(
-        @RequestParam uuidUser: String,
-        @RequestParam uuidProduct: String
+        @PathVariable uuidUser: String,
+        @PathVariable uuidProduct: String
     ): ResponseEntity<CartResponse> {
         return cartService.deleteItemFromCartUser(uuidUser, uuidProduct)
     }
 
     @PatchMapping("/update-quantity-item/{uuidUser}/{uuidProduct}/{newQuantity}")
     fun updateQuantityItem(
-        @RequestParam uuidUser: String,
-        @RequestParam uuidProduct: String,
-        @RequestParam newQuantity: Int
+        @PathVariable uuidUser: String,
+        @PathVariable uuidProduct: String,
+        @PathVariable newQuantity: Int
     ): ResponseEntity<CartResponse> {
         return cartService.updateQuantityItem(uuidUser, uuidProduct, newQuantity)
     }
