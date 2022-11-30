@@ -51,7 +51,7 @@ class CartController(
         @PathVariable uuidUser: String,
         @PathVariable uuidProduct: String,
         @PathVariable newQuantity: Int
-    ): ResponseEntity<CartResponse> {
+    ): ResponseEntity<*>? {
         return cartService.updateQuantityItem(uuidUser, uuidProduct, newQuantity)
     }
 

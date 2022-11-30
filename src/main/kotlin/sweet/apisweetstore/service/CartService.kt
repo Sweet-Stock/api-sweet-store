@@ -7,6 +7,7 @@ import sweet.apisweetstore.dto.request.ItemCartRequest
 import sweet.apisweetstore.dto.response.AddCartResponse
 import sweet.apisweetstore.dto.response.CartResponse
 import sweet.apisweetstore.enums.CartMessage
+import sweet.apisweetstore.exception.FlowException
 import sweet.apisweetstore.integration.IntegracaoSweetStock
 import sweet.apisweetstore.integration.ProductResponseAPI
 import sweet.apisweetstore.model.Cart
@@ -22,34 +23,21 @@ class CartService(
 ) {
 
     fun addProductToCart(products: List<ItemCartRequest>, uuidUser: String): ResponseEntity<AddCartResponse> {
-        if (userRepository.countByUuid(uuidUser) != 1L) {
-            return ResponseEntity.status(404).body(AddCartResponse(message = CartMessage.USER_NOT_EXIST.message))
-        }
+        uuidUser.verifyUserByUuid()
 
-        if (products.isEmpty()) {
-            return ResponseEntity.status(400).body(
-                AddCartResponse(
-                    message = CartMessage.EMPTY_LIST_CARD.message
-                )
-            )
-        }
+        if (products.isEmpty())
+            throw FlowException(message = CartMessage.EMPTY_LIST_CARD.message)
 
-        if (products.any { it.quantityProduct <= 0 }) {
-            return ResponseEntity.status(400).body(AddCartResponse(message = CartMessage.SHOULD_BIG_THAN_0.message))
-        }
+        if (products.any { it.quantityProduct <= 0 })
+            throw FlowException(message = CartMessage.SHOULD_BIG_THAN_0.message)
 
-        val validDiffCompanies = products.distinctBy { it.uuidCompany }
+        val validDiffCompanies = products.distinctBy { it.uuidCompany }.size
 
-        if (validDiffCompanies.size > 1) {
-            return ResponseEntity.status(400)
-                .body(AddCartResponse(message = CartMessage.CAN_SEND_JUST_ONE_COMPANY.message))
-        }
+        if (validDiffCompanies > 1)
+            throw FlowException(message = CartMessage.CAN_SEND_JUST_ONE_COMPANY.message)
 
-        if (products.distinctBy { it.uuidProduct }.size != products.size) {
-            return ResponseEntity.status(400).body(
-                AddCartResponse(message = CartMessage.SEND_JUST_DIFFERENT_PRODUCTS.message)
-            )
-        }
+        if (products.distinctBy { it.uuidProduct }.size != products.size)
+            throw FlowException(message = CartMessage.SEND_JUST_DIFFERENT_PRODUCTS.message)
 
         var saved = 0
 
@@ -94,19 +82,12 @@ class CartService(
     }
 
     fun getUserCartByUuid(uuidUser: String): ResponseEntity<CartResponse> {
-        if (userRepository.countByUuid(uuidUser) != 1L) return ResponseEntity.status(404).body(
-            CartResponse(message = CartMessage.USER_NOT_EXIST.message)
-        )
+        uuidUser.verifyUserByUuid()
 
         val itensCart = cartRepository.getUserCartByUuid(uuidUser)
 
-        if (itensCart.isEmpty()) {
-            return ResponseEntity.status(404).body(
-                CartResponse(
-                    message = CartMessage.EMPTY_CART.message
-                )
-            )
-        }
+        if (itensCart.isEmpty())
+            throw FlowException(message = CartMessage.EMPTY_CART.message, statusCode = 404)
 
         var uuidsRequest = mutableListOf<String>()
 
@@ -142,19 +123,10 @@ class CartService(
     }
 
     fun eraseUserCart(uuidUser: String): ResponseEntity<CartResponse> {
-        if (userRepository.countByUuid(uuidUser) != 1L) return ResponseEntity.status(404).body(
-            CartResponse(
-                message = CartMessage.USER_NOT_EXIST.message
-            )
-        )
+        uuidUser.verifyUserByUuid()
 
-        if (cartRepository.getUserCartByUuid(uuidUser).isEmpty()) {
-            return ResponseEntity.status(400).body(
-                CartResponse(
-                    message = CartMessage.EMPTY_CART_NOTHING_TO_ERASE.message
-                )
-            )
-        }
+        if (cartRepository.getUserCartByUuid(uuidUser).isEmpty())
+            throw FlowException(message = CartMessage.EMPTY_CART_NOTHING_TO_ERASE.message, statusCode = 404)
 
         return ResponseEntity.status(200).body(
             CartResponse(
@@ -165,19 +137,10 @@ class CartService(
     }
 
     fun deleteItemFromCartUser(uuidUser: String, uuidProduct: String): ResponseEntity<CartResponse> {
-        if (userRepository.countByUuid(uuidUser) != 1L) return ResponseEntity.status(404).body(
-            CartResponse(
-                message = CartMessage.USER_NOT_EXIST.message
-            )
-        )
+        uuidUser.verifyUserByUuid()
 
-        if (cartRepository.countItemFromCartUser(uuidUser, uuidProduct) == 0L) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                CartResponse(
-                    message = CartMessage.NOT_FOUND_ITEM_ERROR.message
-                )
-            )
-        }
+        if (cartRepository.countItemFromCartUser(uuidUser, uuidProduct) == 0L)
+            throw FlowException(message = CartMessage.NOT_FOUND_ITEM_ERROR.message, statusCode = 404)
 
         cartRepository.deleteItemFromCartUser(uuidUser, uuidProduct)
 
@@ -185,35 +148,24 @@ class CartService(
     }
 
     fun updateQuantityItem(uuidUser: String, uuidProduct: String, newQuantity: Int): ResponseEntity<CartResponse> {
-        if (userRepository.countByUuid(uuidUser) != 1L) return ResponseEntity.status(404).body(
-            CartResponse(
-                message = CartMessage.USER_NOT_EXIST.message
-            )
-        )
+        uuidUser.verifyUserByUuid()
 
-        if (cartRepository.countItemFromCartUser(uuidUser, uuidProduct) == 0L) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                CartResponse(
-                    message = CartMessage.NOT_FOUND_ITEM_ERROR.message
-                )
-            )
-        }
+        if (cartRepository.countItemFromCartUser(uuidUser, uuidProduct) == 0L)
+            throw FlowException(message = CartMessage.NOT_FOUND_ITEM_ERROR.message, statusCode = 404)
 
-        if (newQuantity <= 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                CartResponse(
-                    message = CartMessage.UPDATE_ERROR_ITEM.message
-                )
-            )
-        }
+        if (newQuantity <= 0)
+            throw FlowException(message = CartMessage.UPDATE_ERROR_ITEM.message)
 
-        if (cartRepository.updateQuantityItem(uuidUser, uuidProduct, newQuantity) == 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                CartResponse(
-                    message = CartMessage.UPDATE_ERROR_ITEM_NO_DIFF.message
-                )
-            )
-        }
+        if (cartRepository.updateQuantityItem(uuidUser, uuidProduct, newQuantity) == 0)
+            throw FlowException(message = CartMessage.UPDATE_ERROR_ITEM_NO_DIFF.message)
+
         return ResponseEntity.ok().build()
     }
+
+    fun String.verifyUserByUuid() {
+        if (userRepository.countByUuid(this) != 1L)
+            throw FlowException(message = CartMessage.USER_NOT_EXIST.message, statusCode = 404)
+    }
+
+
 }
