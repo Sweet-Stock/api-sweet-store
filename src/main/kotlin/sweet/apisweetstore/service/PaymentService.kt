@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import sweet.apisweetstore.dto.request.PaymentRequest
 import sweet.apisweetstore.dto.response.PaymentResponse
+import sweet.apisweetstore.exception.FlowException
 import sweet.apisweetstore.mapper.payment.PaymentListModelToListResponse
 import sweet.apisweetstore.mapper.payment.PaymentRequestToModel
 import sweet.apisweetstore.repository.PaymentRepository
@@ -19,18 +20,31 @@ class PaymentService(
 ) {
 
     fun addPaymentForUser(paymentRequest: PaymentRequest): ResponseEntity<Any> {
-        if(userRepository.countByUuid(paymentRequest.uuidUser) != 1L) return ResponseEntity.badRequest().build()
+        if (userRepository.countByUuid(paymentRequest.uuidUser) != 1L) return ResponseEntity.badRequest().build()
+
+        if (paymentRepository.countCartByNumberAndType(
+                paymentRequest.uuidUser,
+                paymentRequest.cardNumber,
+                paymentRequest.type
+            ) == 1L
+        ) {
+            throw FlowException(
+                message = """O cartão de número ${paymentRequest.cardNumber} e tipo ${paymentRequest.type} já
+                foi cadastrado para este usuário""".trimIndent(),
+                statusCode = 422
+            )
+        }
 
         return ResponseEntity.status(201).body(paymentRepository.save(paymentRequestToModel.map(paymentRequest)))
     }
 
     fun getPaymentsByUser(uuidUser: String): ResponseEntity<List<PaymentResponse>> {
-        if(userRepository.countByUuid(uuidUser) != 1L) return ResponseEntity.badRequest().build()
+        if (userRepository.countByUuid(uuidUser) != 1L) return ResponseEntity.badRequest().build()
 
         var payments = paymentRepository.findAllByUuidUser(uuidUser)
 
         payments.forEach {
-            if (it.cardNumber.replace("\\s".toRegex(), "").length == 16){
+            if (it.cardNumber.replace("\\s".toRegex(), "").length == 16) {
                 it.cardNumber = "**** **** **** " + it.cardNumber.takeLast(4)
             }
         }
@@ -39,7 +53,7 @@ class PaymentService(
     }
 
     fun deletePaymentsByIdPayment(idPayment: Int): ResponseEntity<Any> {
-        if(paymentRepository.findById(idPayment).isEmpty) return ResponseEntity.badRequest().build()
+        if (paymentRepository.findById(idPayment).isEmpty) return ResponseEntity.badRequest().build()
 
         paymentRepository.deleteById(idPayment)
 
