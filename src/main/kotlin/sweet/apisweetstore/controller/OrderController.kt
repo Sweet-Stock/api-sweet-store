@@ -20,7 +20,7 @@ class OrderController(
 
     @GetMapping("/get-user-orders/{uuidUser}")
     fun getUserOrders(@PathVariable uuidUser: String): ResponseEntity<List<OrderResponse>>{
-        return  orderService.getUserOrders(uuidUser)
+        return orderService.getUserOrders(uuidUser)
     }
 
     @GetMapping("/get-users-orders-by-company/{nameCompany}")
@@ -32,8 +32,4 @@ class OrderController(
     fun updateStatus(@PathVariable idOrder: Int, @PathVariable newStatus: String): ResponseEntity<Any>{
         return orderService.updateStatus(idOrder, newStatus)
     }
-
-
-
-
 }

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import sweet.apisweetstore.dto.request.OrderRequest
+import sweet.apisweetstore.dto.response.AddressResponse
 import sweet.apisweetstore.dto.response.OrderResponse
 import sweet.apisweetstore.exception.FlowException
 import sweet.apisweetstore.integration.IntegracaoSweetStock
@@ -157,7 +158,8 @@ class OrderService(
         if (orderRepository.countByNameCompany(nameCompany) == 0L) return ResponseEntity.noContent().build()
 
         val orderResponses = orderRepository.getCompanyOrders(nameCompany)
-            .map { (idOrder, _, statusOrder, valueOrder, quantityItems, dateOrder, nameConfectionery, card, brandCard) ->
+            .map { (idOrder, uuidUser, statusOrder, valueOrder, quantityItems, dateOrder, nameConfectionery, card, brandCard) ->
+                var user = userRepository.findByUuid(uuidUser?: "")
                 OrderResponse(
                     idOrder = idOrder,
                     statusOrder = statusOrder,
@@ -166,7 +168,17 @@ class OrderService(
                     valueOrder = valueOrder,
                     card = card,
                     brandCard = brandCard,
-                    quantityItems = quantityItems
+                    quantityItems = quantityItems,
+                    nameUser = user.name,
+                    address = AddressResponse(
+                        city = user.address?.city,
+                        complement = user.address?.complement,
+                        neighborhood = user.address?.neighborhood,
+                        number = user.address?.number,
+                        state = user.address?.state,
+                        street = user.address?.street,
+                        cep = user.address?.cep
+                    )
                 )
             }
 

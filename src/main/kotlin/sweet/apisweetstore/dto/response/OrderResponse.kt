@@ -1,5 +1,6 @@
 package sweet.apisweetstore.dto.response
 
+import sweet.apisweetstore.model.Address
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -12,9 +13,6 @@ data class OrderResponse(
     val card: String? = "",
     val brandCard: String? = "",
     val quantityItems: Int? = 0,
-
-//    nome,
-//    enderco
-
-
+    val nameUser: String ? = "",
+    val address: AddressResponse ? = AddressResponse()
 )
