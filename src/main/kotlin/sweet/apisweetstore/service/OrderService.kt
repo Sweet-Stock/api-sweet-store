@@ -154,7 +154,7 @@ class OrderService(
     fun getUsersOrdersByCompany(nameCompany: String): ResponseEntity<List<OrderResponse>> {
         println(nameCompany)
 
-        if (orderRepository.countByNameCompany(nameCompany) == 0L) return ResponseEntity.badRequest().build()
+        if (orderRepository.countByNameCompany(nameCompany) == 0L) return ResponseEntity.noContent().build()
 
         val orderResponses = orderRepository.getCompanyOrders(nameCompany)
             .map { (idOrder, _, statusOrder, valueOrder, quantityItems, dateOrder, nameConfectionery, card, brandCard) ->
