@@ -9,7 +9,12 @@ data class OrderResponse(
     val dateOrder: LocalDateTime? = null,
     val nameConfectionery: String? = "",
     val valueOrder: BigDecimal? = BigDecimal.ZERO,
-    val card: String? ="",
+    val card: String? = "",
     val brandCard: String? = "",
     val quantityItems: Int? = 0,
+
+//    nome,
+//    enderco
+
+
 )
