@@ -15,7 +15,7 @@ data class OrderItem(
     val idOrder: Int? = null,
     val name: String? = "",
     val saleValue: BigDecimal? = BigDecimal.ZERO,
-    val expirationDate: Date,
+    val expirationDate: Date ? = null,
     val isRefigerated: Boolean? = null,
     val total: Int? = 0,
     val unitMeasurement: String? = "",
