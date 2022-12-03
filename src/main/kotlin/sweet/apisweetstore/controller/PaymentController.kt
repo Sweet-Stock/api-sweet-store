@@ -8,6 +8,7 @@ import sweet.apisweetstore.service.PaymentService
 
 @RestController
 @RequestMapping("/payment")
+@CrossOrigin(origins = arrayOf("*"))
 class PaymentController(
     private val paymentService: PaymentService
 ) {

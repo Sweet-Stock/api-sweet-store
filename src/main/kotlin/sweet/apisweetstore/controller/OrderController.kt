@@ -8,6 +8,7 @@ import sweet.apisweetstore.service.OrderService
 
 @RestController
 @RequestMapping("/order")
+@CrossOrigin(origins = arrayOf("*"))
 class OrderController(
     private val orderService: OrderService
 ) {
