@@ -17,5 +17,6 @@ data class ProductResponseAPI(
     val unitMeasurement: String? = "",
     val category: Category? = Category(),
     val picture: String? = "",
-    val nutritionalFacts: NutritionalFactsResponseAPI?
+    val nutritionalFacts: NutritionalFactsResponseAPI?,
+    var quantityInCart: Int? = 0
 )

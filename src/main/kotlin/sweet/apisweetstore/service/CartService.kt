@@ -115,11 +115,21 @@ class CartService(
                         unitMeasurement = it.unitMeasurement,
                         category = it.category,
                         picture = it.picture,
-                        nutritionalFacts = it.nutritionalFacts
+                        nutritionalFacts = it.nutritionalFacts,
+                        quantityInCart = takeQuantityInCart(itensCart, it.uuid ?: "")
                     )
                 }
             )
         )
+    }
+
+    private fun takeQuantityInCart(itensCart: List<Cart>, uuidProduct: String): Int {
+        itensCart.forEach {
+            if (it.uuidProduct == uuidProduct) {
+                return it.quantityProduct
+            }
+        }
+        return 0
     }
 
     fun eraseUserCart(uuidUser: String): ResponseEntity<CartResponse> {
