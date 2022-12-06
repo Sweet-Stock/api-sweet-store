@@ -9,5 +9,6 @@ data class UserResponse(
     val name: String,
     val email: String,
     val profile: ProfileType? = ProfileType.MODERATE,
-    val authType: AuthType? = AuthType.DEFAULT
+    val authType: AuthType? = AuthType.DEFAULT,
+    val addressResponse: AddressResponse? = AddressResponse()
 )

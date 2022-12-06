@@ -7,6 +7,7 @@ import sweet.apisweetstore.dto.request.ChangePasswordRequest
 import sweet.apisweetstore.dto.request.UserRequest
 import sweet.apisweetstore.dto.response.ChangePasswordResponse
 import sweet.apisweetstore.dto.request.LoginRequest
+import sweet.apisweetstore.dto.response.AddressResponse
 import sweet.apisweetstore.dto.response.LoginResponse
 import sweet.apisweetstore.dto.response.UserResponse
 import sweet.apisweetstore.enums.ChangePasswordMessage
@@ -59,7 +60,16 @@ class UserService(
                     email = loginRequest.email,
                     message = LoginMessage.LOGIN_SUCCESS.message,
                     name = user.name,
-                    profile = user.profile.toString()
+                    profile = user.profile.toString(),
+                    addressResponse = AddressResponse(
+                        user.address?.city,
+                        user.address?.complement,
+                        user.address?.neighborhood,
+                        user.address?.number,
+                        user.address?.state,
+                        user.address?.street,
+                        user.address?.cep
+                    )
                 )
             )
 
