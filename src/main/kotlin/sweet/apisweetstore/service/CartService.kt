@@ -58,7 +58,6 @@ class CartService(
                         uuidProduct = it.uuidProduct,
                         uuidCompany = it.uuidCompany,
                         quantityProduct = it.quantityProduct,
-                        dateAddition = LocalDateTime.now()
                     )
                 )
             }

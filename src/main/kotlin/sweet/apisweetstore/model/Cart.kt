@@ -13,6 +13,5 @@ data class Cart(
     val uuidUser: String,
     val uuidProduct: String,
     val uuidCompany: String,
-    val quantityProduct: Int,
-    val dateAddition: LocalDateTime? = LocalDateTime.now(),
+    val quantityProduct: Int
 )
