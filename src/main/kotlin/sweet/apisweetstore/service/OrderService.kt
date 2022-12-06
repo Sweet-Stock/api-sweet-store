@@ -71,8 +71,6 @@ class OrderService(
         ).body
 
         val order = Order(
-            idOrder = null,
-            statusOrder = "Pronto para preparação",
             uuidUser = uuidUser,
             valueOrder = totalValueOrder,
             quantityItems = cartUserProducts?.itens?.size,
