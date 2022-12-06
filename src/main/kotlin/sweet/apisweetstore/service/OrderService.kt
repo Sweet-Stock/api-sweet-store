@@ -1,20 +1,18 @@
 package sweet.apisweetstore.service
 
-import com.fasterxml.jackson.core.JsonProcessingException
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import sweet.apisweetstore.dto.request.OrderRequest
 import sweet.apisweetstore.dto.response.AddressResponse
 import sweet.apisweetstore.dto.response.OrderResponse
+import sweet.apisweetstore.enums.CartMessage
 import sweet.apisweetstore.exception.FlowException
 import sweet.apisweetstore.integration.IntegracaoSweetStock
 import sweet.apisweetstore.model.Order
 import sweet.apisweetstore.model.OrderItem
 import sweet.apisweetstore.repository.*
 import java.math.BigDecimal
-import java.time.LocalDateTime
 
 @Service
 class OrderService(
@@ -30,18 +28,25 @@ class OrderService(
     fun createOrder(orderRequest: OrderRequest): ResponseEntity<OrderResponse> {
         val (uuidUser, idPayment) = orderRequest
 
-        if (userRepository.countByUuid(uuidUser) != 1L) return ResponseEntity.badRequest().build()
+        uuidUser.verifyUserByUuid()
 
-        if (paymentRepository.countById(idPayment) != 1L) return ResponseEntity.badRequest().build()
+        if (paymentRepository.countById(idPayment) != 1L)
+            throw FlowException("Metodo de pagamento não existe", "ERROR", 404)
 
         val payment = paymentRepository.findById(idPayment).get()
 
-        if (payment.uuidUser != uuidUser) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        if (payment.uuidUser != uuidUser)
+            throw FlowException(
+                "Metodo de pagamento não permitido para este usuário",
+                "ERROR",
+                HttpStatus.UNAUTHORIZED.value()
+            )
 
         val cartUserProducts = cartService.getUserCartByUuid(uuidUser).body
         val cartUserProductsOriginal = cartRepository.getUserCartByUuid(uuidUser)
 
-        if (cartUserProducts?.itens?.size == 0) return ResponseEntity.badRequest().build()
+        if (cartUserProducts?.itens?.size == 0)
+            throw FlowException("Ocorreu um erro ao mapear produtos do carrinho","ERROR")
 
         cartUserProducts?.itens?.forEach { product ->
             cartUserProductsOriginal.forEach { cartProduct ->
@@ -71,7 +76,6 @@ class OrderService(
             uuidUser = uuidUser,
             valueOrder = totalValueOrder,
             quantityItems = cartUserProducts?.itens?.size,
-            dateOrder = LocalDateTime.now(),
             nameConfectionery = nameCompany,
             card = payment.cardNumber,
             brandCard = payment.brand
@@ -195,4 +199,8 @@ class OrderService(
         return ResponseEntity.ok().build()
     }
 
+    fun String.verifyUserByUuid() {
+        if (userRepository.countByUuid(this) != 1L)
+            throw FlowException(message = CartMessage.USER_NOT_EXIST.message, statusCode = 404)
+    }
 }
