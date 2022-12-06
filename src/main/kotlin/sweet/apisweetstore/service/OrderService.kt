@@ -171,15 +171,15 @@ class OrderService(
                     card = card,
                     brandCard = brandCard,
                     quantityItems = quantityItems,
-                    nameUser = user.name,
+                    nameUser = user?.name,
                     address = AddressResponse(
-                        city = user.address?.city,
-                        complement = user.address?.complement,
-                        neighborhood = user.address?.neighborhood,
-                        number = user.address?.number,
-                        state = user.address?.state,
-                        street = user.address?.street,
-                        cep = user.address?.cep
+                        city = user?.address?.city,
+                        complement = user?.address?.complement,
+                        neighborhood = user?.address?.neighborhood,
+                        number = user?.address?.number,
+                        state = user?.address?.state,
+                        street = user?.address?.street,
+                        cep = user?.address?.cep
                     )
                 )
             }

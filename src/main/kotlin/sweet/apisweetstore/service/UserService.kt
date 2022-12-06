@@ -47,10 +47,13 @@ class UserService(
                 Cryptography.convertPasswordToSHA512(loginRequest.password)
             )
 
+            var teste = Cryptography.convertPasswordToSHA512(loginRequest.password)
+            var email = loginRequest.email
+
             val uuidUser = userRepository.findUuidUser(
-                loginRequest.email,
-                Cryptography.convertPasswordToSHA512(loginRequest.password)
-            )
+                email,
+                teste
+            )?: ""
 
             val user = userRepository.findByUuid(uuidUser)
 
@@ -59,16 +62,16 @@ class UserService(
                     uuid = uuidUser,
                     email = loginRequest.email,
                     message = LoginMessage.LOGIN_SUCCESS.message,
-                    name = user.name,
-                    profile = user.profile.toString(),
+                    name = user?.name,
+                    profile = user?.profile.toString(),
                     addressResponse = AddressResponse(
-                        user.address?.city,
-                        user.address?.complement,
-                        user.address?.neighborhood,
-                        user.address?.number,
-                        user.address?.state,
-                        user.address?.street,
-                        user.address?.cep
+                        user?.address?.city,
+                        user?.address?.complement,
+                        user?.address?.neighborhood,
+                        user?.address?.number,
+                        user?.address?.state,
+                        user?.address?.street,
+                        user?.address?.cep
                     )
                 )
             )
@@ -121,7 +124,7 @@ class UserService(
     }
 
     fun updateProfile(user: UserRequest, uuid: String): ResponseEntity<Unit> {
-        var userToUpdate: User = userRepository.findByUuid(uuid)
+        var userToUpdate: User = userRepository.findByUuid(uuid)!!
 
         if (userToUpdate == null) {
             return ResponseEntity.noContent().build()

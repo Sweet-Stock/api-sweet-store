@@ -19,7 +19,7 @@ interface UserRepository: JpaRepository<User, String> {
     fun auth(email: String, password: String): Long
 
     @Query("select u.uuid from User u where u.email = ?1 and u.password = ?2")
-    fun findUuidUser(email: String, password: String): String
+    fun findUuidUser(email: String, password: String): String?
     @Query("select count(u) from User u where u.uuid = ?1 and u.password = ?2")
     fun verifyActualPassword(uuid: String, password: String): Long
 
@@ -28,6 +28,6 @@ interface UserRepository: JpaRepository<User, String> {
     @Query("update User u set u.password = ?1 where u.uuid = ?2")
     fun changePassword(password: String, uuid: String): Int
 
-    fun findByUuid(uuid: String): User
+    fun findByUuid(uuid: String): User?
 
 }

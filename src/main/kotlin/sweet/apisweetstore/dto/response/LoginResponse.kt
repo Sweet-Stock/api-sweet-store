@@ -6,5 +6,5 @@ data class LoginResponse(
     val profile: String? = "",
     val email: String,
     val message: String,
-    val addressResponse: AddressResponse? = AddressResponse()
+    val addressResponse: AddressResponse? = null
 )
