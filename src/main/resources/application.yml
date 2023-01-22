@@ -5,12 +5,12 @@ server:
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres?charSet=LATIN1
+    url: jdbc:postgresql://sweet-store-pgsql.ce6tfsyepdjw.us-east-1.rds.amazonaws.com:5432/postgres?charSet=LATIN1
     username: postgres
     password: sweetstore
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate.ddl-auto: update
+    hibernate.ddl-auto: create
     generate-ddl: true
     show-sql: true
 sweetstock:
