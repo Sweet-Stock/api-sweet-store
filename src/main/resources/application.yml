@@ -14,6 +14,6 @@ spring:
     generate-ddl: true
     show-sql: true
 sweetstock:
-  domain: localhost
+  domain: http://52.44.88.34/
   path: /v1/sweet-stock/
   port: 8080
