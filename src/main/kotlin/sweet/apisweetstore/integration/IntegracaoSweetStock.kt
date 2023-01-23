@@ -8,7 +8,7 @@ import sweet.apisweetstore.exception.FlowException
 
 @FeignClient(
     name = "integracao-sweet-stock",
-    url = "https://sweetstock-backend.servehttp.com/v1/sweet-stock",
+    url = "http://52.44.88.34:8080/v1/sweet-stock",
     configuration = [FeignSimpleEncoderConfig::class]
 )
 interface IntegracaoSweetStock {
